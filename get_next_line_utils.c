@@ -6,7 +6,7 @@
 /*   By: yonlee <yonlee@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 16:20:27 by yonlee            #+#    #+#             */
-/*   Updated: 2021/10/25 19:56:31 by yonlee           ###   ########.fr       */
+/*   Updated: 2021/10/26 21:45:40 by yonlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,18 +43,21 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 	return (src_size);
 }
 
-char	*ft_strdup(const char *s)
+char	*ft_strndup(const char *s, size_t n)
 {
 	char	*result;
-	size_t	len;
+	size_t	i = 0;
 
-	len = ft_strlen(s);
-	result = (char *)malloc(sizeof(char) * (len + 1));
+	i = 0;
+	result = (char *)malloc(sizeof(char) * (n + 1));
 	if (!result)
 		return (0);
-	result[len] = '\0';
-	while (len--)
-		result[len] = s[len];
+	while (i < n)
+	{
+		result[i] = s[i];
+		i++;
+	}
+	result[i] = '\0';
 	return (result);
 }
 
