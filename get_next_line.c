@@ -39,15 +39,30 @@ char	*split_line(char **backup) // 문장 자르는 함수 구현
 	return (new_line);
 }
 
+char	*free_all(char **backup, char **buf)
+{
+	if (*buf)
+	{
+		free(*buf);
+		buf = 0;
+	}
+	if (*backup)
+	{
+		
+	}
+	return (0);
+}
+
 char	*get_next_line(int fd)
 {
 	static char	*backup;
-	char		buf[BUFFER_SIZE + 1];
+	char		*buf;
 	ssize_t		read_size;
 	char		*last;
 
-	if (read(fd, buf, 0) == -1 || BUFFER_SIZE <= 0)
-		return (0);
+	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buf || read(fd, buf, 0) == -1 || BUFFER_SIZE <= 0)
+		return (free_all(&backup, &buf));
 	if (!backup) // 해당 fd 버퍼가 초기화되어 있지 않은 경우
 		backup = ft_strndup("", 0);
 	if (ft_strchr(backup, '\n'))
@@ -62,7 +77,6 @@ char	*get_next_line(int fd)
 		read_size = read(fd, buf, BUFFER_SIZE);
 	}
 	last = split_line(&backup); // 현재까지 남아 있는 문자열 잘라서 last에 저장
-	free(backup);
-	backup = 0;
+	free_all(&backup, &buf);
 	return (last);
 }
