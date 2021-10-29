@@ -6,7 +6,7 @@
 /*   By: yonlee <yonlee@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 17:51:27 by yonlee            #+#    #+#             */
-/*   Updated: 2021/10/27 20:34:11 by yonlee           ###   ########.fr       */
+/*   Updated: 2021/10/29 01:13:56 by yonlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ t_list	*find_fd(t_list **lst, int fd)
 	t_list	*prev;
 	t_list	*new;
 
+	if (!(*lst))
+		return (0);
 	cur = *lst;
 	while (cur)
 	{
@@ -71,7 +73,7 @@ char	*free_all(t_list **head, t_list *lst)
 	t_list	*cur;
 	t_list	*prev;
 
-	if (!(head) || !lst)
+	if (!(*head) || !lst)
 		return (0);
 	cur = *head;
 	prev = 0;
