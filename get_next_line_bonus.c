@@ -6,7 +6,7 @@
 /*   By: yonlee <yonlee@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 17:51:27 by yonlee            #+#    #+#             */
-/*   Updated: 2021/10/27 20:34:11 by yonlee           ###   ########.fr       */
+/*   Updated: 2021/12/06 15:25:57 by yonlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,9 @@ t_list	*find_fd(t_list **lst, int fd)
 	if (!new)
 		return (0);
 	new->fd = fd;
-	new->backup = 0;
+	new->backup = ft_strndup("", 0);
+	if (!(new->backup))
+		return (0);
 	new->next = 0;
 	if (!(*lst))
 		*lst = new;
@@ -66,9 +68,28 @@ t_list	*find_fd(t_list **lst, int fd)
 	return (new);
 }
 
-void	free_all(t_list **head, t_list **lst)
+void	free_all(t_list **lst, int fd)
 {
+	t_list	*cur;
+	t_list	*prev;
 
+	cur = *lst;
+	while (cur)
+	{
+		if (cur->fd == fd)
+		{
+			prev->next = cur->next;
+			if (cur->backup)
+			{
+				free(cur->backup);
+				cur->backup = 0;
+			}
+			free(cur);
+			return ;
+		}
+		prev = cur;
+		cur = cur->next;
+	}
 }
 
 char	*get_next_line(int fd)
@@ -84,8 +105,6 @@ char	*get_next_line(int fd)
 	ptr = find_fd(&head, fd);
 	if (!ptr)
 		return (0);
-	if (!(ptr->backup)) // 해당 fd 버퍼가 초기화되어 있지 않은 경우
-		ptr->backup = ft_strndup("", 0);
 	if (ft_strchr(ptr->backup, '\n'))
 		return (split_line(&(ptr->backup))); // 개행 문자가 포함되어 있을 경우 문장을 잘라 반환
 	read_size = read(fd, buf, BUFFER_SIZE);
@@ -98,7 +117,6 @@ char	*get_next_line(int fd)
 		read_size = read(fd, buf, BUFFER_SIZE);
 	}
 	last = split_line(&(ptr->backup)); // 현재까지 남아 있는 문자열 잘라서 last에 저장
-	free(ptr->backup);
-	ptr->backup = 0;
+	free_all(&head, fd);
 	return (last);
 }
